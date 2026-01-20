@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khilafat</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial Black', 'Helvetica Bold', sans-serif;
+            background: #e8e4d9;
+            min-height: 100vh;
+            color: #000;
+            padding-bottom: 70px;
+            overflow-x: hidden;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            min-height: calc(100vh - 70px);
+            padding: 20px;
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Home Page */
+        #home {
+            text-align: center;
+        }
+
+        .emoji-container {
+            margin-bottom: 20px;
+            filter: drop-shadow(6px 6px 0 #000);
+        }
+
+        .emoji-container img {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            border: 4px solid #000;
+        }
+
+        .home-text {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #000;
+            text-transform: uppercase;
+            background: #ff5722;
+            padding: 15px 30px;
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0 #000;
+            display: inline-block;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .home-text:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 6px 6px 0 #000;
+        }
+
+        .home-text:active {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        /* Services Page */
+        #services {
+            align-items: stretch;
+            justify-content: flex-start;
+            padding-top: 30px;
+        }
+
+        .services-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            color: #000;
+            text-align: center;
+            width: 100%;
+            text-transform: uppercase;
+            background: #66d9ef;
+            padding: 12px 25px;
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0 #000;
+            display: inline-block;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #fff;
+            border: 4px solid #000;
+            padding: 20px;
+            cursor: pointer;
+            color: #000;
+            box-shadow: 6px 6px 0 #000;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .card:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .card:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        .card-subtitle {
+            color: #444;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border: 4px solid #000;
+            padding: 30px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            color: #000;
+            box-shadow: 10px 10px 0 #000;
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            color: #000;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .modal-description {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .modal-link {
+            display: inline-block;
+            padding: 12px 28px;
+            background: #f92672;
+            color: #fff;
+            text-decoration: none;
+            border: 3px solid #000;
+            font-weight: 900;
+            text-transform: uppercase;
+            box-shadow: 5px 5px 0 #000;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .modal-link:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0 #000;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #000;
+            font-weight: 900;
+        }
+
+        .modal-close:hover {
+            color: #f92672;
+        }
+
+        .modal-wrapper {
+            position: relative;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #000;
+            border-top: 4px solid #000;
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            padding: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            color: #000;
+            padding: 12px 40px;
+            border: none;
+            background: #e8e4d9;
+            border-right: 4px solid #000;
+            font-weight: 900;
+            text-transform: uppercase;
+            transition: background 0.1s;
+        }
+
+        .nav-item:last-child {
+            border-right: none;
+        }
+
+        .nav-item:hover {
+            background: #66d9ef;
+        }
+
+        .nav-item.active {
+            background: #a6e22e;
+        }
+
+        .nav-icon {
+            display: none;
+        }
+
+        .nav-label {
+            font-size: 1rem;
+            font-weight: 900;
+        }
+
+        /* Gallery Page */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            background: #fff;
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0 #000;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .gallery-item:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .gallery-item:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .emoji-container img {
+                max-width: 200px;
+            }
+            .home-text {
+                font-size: 1.8rem;
+                padding: 12px 20px;
+            }
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            .nav-item {
+                padding: 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="emoji-container">
+            <img src="image.gif" alt="Laughing at you">
+        </div>
+        <a href="https://matrix.to/#/@smbleh:matrix.salarmuzair.tech" class="home-text" target="_blank">Check Element Loser</a>
+    </div>
+
+    <!-- Services Page -->
+    <div id="services" class="page">
+        <h1 class="services-title">Info</h1>
+        <div class="cards-container">
+            <div class="card" onclick="openModal('canilisten')">
+                <div class="card-title">Canilisten</div>
+                <div class="card-subtitle">Can i really do?</div>
+            </div>
+            <div class="card" onclick="openModal('crafty')">
+                <div class="card-title">Crafty</div>
+                <div class="card-subtitle">Minecraft server</div>
+            </div>
+            <div class="card" onclick="openModal('nextcloud')">
+                <div class="card-title">Nextcloud</div>
+                <div class="card-subtitle">open</div>
+            </div>
+            <div class="card" onclick="openModal('samba')">
+                <div class="card-title">Samba Server</div>
+                <div class="card-subtitle">add? 256 gb for free you get</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Page -->
+    <div id="gallery" class="page">
+        <h1 class="services-title">Gallery</h1>
+        <div class="gallery-container">
+            <div class="gallery-item">
+                <img src="gallery/1.png" alt="Gallery image 1">
+            </div>
+            <div class="gallery-item">
+                <img src="gallery/2.jpg" alt="Gallery image 2">
+            </div>
+            <div class="gallery-item">
+                <img src="gallery/3.jpg" alt="Gallery image 3">
+            </div>
+            <div class="gallery-item">
+                <img src="gallery/4.jpg" alt="Gallery image 4">
+            </div>
+            <div class="gallery-item">
+                <img src="gallery/5.jpg" alt="Gallery image 5">
+            </div>
+            <div class="gallery-item">
+                <img src="gallery/6.jpg" alt="Gallery image 6">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-wrapper">
+            <span class="modal-close" onclick="closeModal(event)">&times;</span>
+            <div class="modal">
+                <div class="modal-icon" id="modal-icon"></div>
+                <h2 class="modal-title" id="modal-title"></h2>
+                <p class="modal-description" id="modal-description"></p>
+                <a href="#" class="modal-link" id="modal-link" target="_blank">Visit Service</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="showPage('home')">
+            <span class="nav-icon"></span>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" onclick="showPage('services')">
+            <span class="nav-icon"></span>
+            <span class="nav-label">Desktop</span>
+        </div>
+        <div class="nav-item" onclick="showPage('gallery')">
+            <span class="nav-icon"></span>
+            <span class="nav-label">Gallery</span>
+        </div>
+    </nav>
+
+    <script>
+        // Service details
+        const services = {
+            canilisten: {
+                title: 'Canilisten',
+                //description: 'Stream music from our self-hosted server.\n\nHow to join:\n1. Open your browser\n2. Go to: canilisten.example.com\n3. Login with your credentials or request access',
+                link: 'https://canilisten.salarmuzair.tech/'
+            },
+            crafty: {
+                title: 'Crafty',
+                //description: 'Minecraft server management.\n\nHow to join:\n1. Open Minecraft Java Edition\n2. Go to Multiplayer > Add Server\n3. Server Address: mc.example.com\n4. Click Join Server',
+                link: 'https://crafty.salarmuzair.tech/'
+            },
+            nextcloud: {
+                title: 'Nextcloud',
+                description: 'add tailscale brody',
+                link: 'http://100.109.21.48:10081/apps/dashboard/'
+            },
+            samba: {
+                title: 'Samba Server',
+                //description: 'Network file sharing for local access.\n\nHow to connect:\n\nWindows: Open File Explorer, type \\\\192.168.x.x in address bar\n\nMac: Finder > Go > Connect to Server > smb://192.168.x.x\n\nLinux: smb://192.168.x.x in file manager',
+                link: '#'
+            }
+        };
+
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        // Modal functions
+        function openModal(serviceId) {
+            const service = services[serviceId];
+            document.getElementById('modal-icon').textContent = '';
+            document.getElementById('modal-title').textContent = service.title;
+            document.getElementById('modal-description').textContent = service.description;
+            document.getElementById('modal-link').href = service.link;
+            document.querySelector('.modal-overlay').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if (event.target.classList.contains('modal-overlay') || event.target.classList.contains('modal-close')) {
+                document.querySelector('.modal-overlay').classList.remove('active');
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelector('.modal-overlay').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
