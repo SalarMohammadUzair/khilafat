@@ -43,9 +43,11 @@
         .emoji-container {
             margin-bottom: 20px;
             filter: drop-shadow(6px 6px 0 #000);
+            max-width: 100%;
         }
 
-        .emoji-container img {
+        .emoji-container img,
+        .emoji-container video {
             max-width: 300px;
             width: 100%;
             height: auto;
@@ -53,10 +55,10 @@
         }
 
         .home-text {
-            font-size: 3rem;
+            font-size: 1.2rem;
             font-weight: 900;
             color: #000;
-            text-transform: uppercase;
+            text-transform: none;
             background: #ff5722;
             padding: 15px 30px;
             border: 4px solid #000;
@@ -326,7 +328,7 @@
                 max-width: 200px;
             }
             .home-text {
-                font-size: 1.8rem;
+                font-size: 1rem;
                 padding: 12px 20px;
             }
             .cards-container {
@@ -342,9 +344,9 @@
     <!-- Home Page -->
     <div id="home" class="page active">
         <div class="emoji-container">
-            <img src="image.gif" alt="Laughing at you">
+            <video src="video.mp4" autoplay loop muted playsinline></video>
         </div>
-        <a href="https://matrix.to/#/@smbleh:matrix.salarmuzair.tech" class="home-text" target="_blank">Check Element Loser</a>
+        <a href="https://quran.com/al-anam/165?translations=22" class="home-text" target="_blank">It is He Who hath made you (His) agents, inheritors of the earth: He hath raised you in ranks, some above others: that He may try you in the gifts He hath given you: for thy Lord is quick in punishment: yet He is indeed Oft-forgiving, Most Merciful.<br>- Quran, 6:165</a>
     </div>
 
     <!-- Services Page -->
